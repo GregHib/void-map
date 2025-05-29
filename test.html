@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Static Tile Grid (Zoom Level 0)</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <style>
+        html, body, #map {
+            height: 100%;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    const tileSize = 256;
+    const numTiles = 256;
+    const bounds = [[0, 0], [tileSize * numTiles, tileSize * numTiles]];
+
+    const map = L.map('map', {
+        crs: L.CRS.Simple,
+        minZoom: 0,  // Allow zooming out
+        maxZoom: 5,   // Allow zooming in
+        zoom: 2,      // Start at base zoom
+        center: [tileSize * 50, tileSize * 50],
+        zoomControl: true, // Re-enable zoom controls
+        maxBounds: bounds,
+    });
+
+    const CustomTileLayer = L.TileLayer.extend({
+        createTile: function (coords, done) {
+            var tile = document.createElement('div');
+            tile.style.width = tileSize + 'px';
+            tile.style.height = tileSize + 'px';
+            tile.style.overflow = 'hidden';
+            tile.style.outline = '1px solid red';
+
+            const label = document.createElement('div');
+            label.style.position = 'absolute';
+            label.style.color = 'white';
+            label.style.fontSize = '10px';
+            label.style.zIndex = '1';
+            label.style.top = '50%'
+            label.style.width = '100%'
+            label.style.textAlign = 'center';
+            label.innerText = [coords.x, -coords.y].join(', ');
+            tile.appendChild(label);
+
+            function createImage(x, y, offsetX, offsetY) {
+                var tile = document.createElement('div');
+                tile.style.width = tileSize + 'px';
+                tile.style.height = tileSize + 'px';
+                tile.style.overflow = 'hidden';
+                const zoomDiff = coords.z - 2; // 0 is our base zoom level
+                const scale = Math.pow(2, zoomDiff);
+
+                var img = document.createElement('img');
+                img.src = `./map_tiles/0/${x}/${y}.png`;
+                img.onload = () => done(null, tile);
+                img.onerror = () => done(null, tile);
+
+                // Scale the image based on zoom difference
+
+                img.width = tileSize * scale;
+                img.height = tileSize * scale;
+                img.style.display = 'block';
+                tile.appendChild(img)
+                img.style.outline = '1px solid blue';
+
+                console.log(`Zoom: ${coords.z}, Coords: ${coords.x}, ${coords.y}, Base: ${x}, ${y}, Scale: ${scale}`);
+                return tile;
+            }
+
+            if (coords.z < 2) {
+                tile.style.display = 'flex'
+                tile.style.flexDirection = 'column'
+                for (let y = 1; y >= 0; y--) {
+                    var row = document.createElement('div')
+                    row.style.display = "flex";
+                    for (let x = 0; x < 2; x++) {
+                        const baseCoords = this._getBaseCoords(coords);
+                        var img = createImage(baseCoords.x + x, baseCoords.y + y, x, y);
+                        img.style.width = '100%';
+                        img.style.height = '100%';
+                        img.style.objectFit = 'cover';
+                        img.style.display = 'block';
+                        img.style.flex = '1';
+                        row.appendChild(img);
+                    }
+                    tile.appendChild(row)
+                }
+            } else {
+                // Always use zoom level 0 tiles regardless of current zoom
+                var img = document.createElement('img');
+
+                // Always use zoom level 0 tiles regardless of current zoom
+                const baseCoords = this._getBaseCoords2(coords);
+                img.src = `./map_tiles/0/${baseCoords.x}/${baseCoords.y}.png`;
+
+                img.onload = () => done(null, tile);
+                img.onerror = () => done(null, tile);
+
+                // Scale the image based on zoom difference
+                const zoomDiff = coords.z - 0; // 0 is our base zoom level
+                const scale = Math.pow(2, zoomDiff);
+
+                img.width = tileSize * scale;
+                img.height = tileSize * scale;
+                img.style.display = 'block';
+
+                // Position the image within the tile based on sub-tile coordinates
+                if (zoomDiff > 0) {
+                    const subX = coords.x % Math.pow(2, zoomDiff);
+                    const subY = (Math.pow(2, zoomDiff) - 1) - ((-coords.y) % Math.pow(2, zoomDiff));
+                    img.style.marginLeft = -subX * tileSize + 'px';
+                    img.style.marginTop = -subY * tileSize + 'px';
+                    img.style.imageRendering = 'crisp-edges'
+                }
+
+                console.log(`Zoom: ${coords.z}, Coords: ${coords.x}, ${coords.y}, Base: ${baseCoords.x}, ${baseCoords.y}, Scale: ${scale}`);
+
+                tile.appendChild(img);
+                tile.style.outline = '1px solid red';
+            }
+            return tile;
+        },
+        _getBaseCoords2: function(coords) {
+            const zoomDiff = coords.z - 0; // 0 is our base zoom level
+
+            if (zoomDiff >= 0) {
+                // Zooming in - multiple tiles map to one base tile
+                return {
+                    x: Math.floor(coords.x / Math.pow(2, zoomDiff)),
+                    y: Math.floor((-coords.y) / Math.pow(2, zoomDiff))
+                };
+            } else {
+                // Zooming out - one base tile maps to multiple display positions
+                return {
+                    x: coords.x * Math.pow(2, -zoomDiff),
+                    y: (-coords.y) * Math.pow(2, -zoomDiff)
+                };
+            }
+        },
+        // Convert current zoom coordinates to base zoom (0) coordinates
+        _getBaseCoords: function (coords) {
+            const divisor = Math.pow(2, coords.z);
+            if (coords.z <= 2) {
+                return {
+                    x: 50 + (coords.x - (50 * divisor)),
+                    y: 50 + (-coords.y - (50 * divisor)),
+                };
+            }
+            return {
+                x: Math.floor(coords.x / divisor),
+                y: Math.floor((-coords.y) / divisor)
+            };
+        }
+    });
+
+    const tileLayer = new CustomTileLayer({
+        tileSize: tileSize,
+        noWrap: true,
+        bounds: bounds,
+        minZoom: 0,
+        maxZoom: 4,
+        errorTileUrl: ''
+    });
+
+    tileLayer.addTo(map);
+</script>
+
+</body>
+</html>
