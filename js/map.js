@@ -41,7 +41,7 @@ $(document).ready(function () {
         }
         map.tile_layer = L.tileLayer('https://raw.githubusercontent.com/GregHib/void-map-tiles/main/' + map.plane + '/{z}/{x}/{y}.png', {
             minZoom: 4,
-            maxZoom: 7,
+            maxZoom: 9,
             attribution: 'Map data',
             noWrap: true,
             tms: true
