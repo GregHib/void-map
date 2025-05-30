@@ -13,7 +13,9 @@ export class PolyArea {
 
     add(position) {
         this.positions.push(position);
-        this.featureGroup.removeLayer(this.polygon);
+        if (this.polygon) {
+            this.featureGroup.removeLayer(this.polygon);
+        }
         this.polygon = this.toLeaflet();
         this.featureGroup.addLayer(this.polygon);
     }
@@ -22,7 +24,9 @@ export class PolyArea {
         for (var i = 0; i < positions.length; i ++) {
             this.positions.push(positions[i]);
         }
-        this.featureGroup.removeLayer(this.polygon);
+        if (this.polygon) {
+            this.featureGroup.removeLayer(this.polygon);
+        }
         this.polygon = this.toLeaflet();
         this.featureGroup.addLayer(this.polygon);
     }
@@ -30,7 +34,9 @@ export class PolyArea {
     removeLast() {
         if (this.positions.length > 0) {
             this.positions.pop();
-            this.featureGroup.removeLayer(this.polygon);
+            if (this.polygon) {
+                this.featureGroup.removeLayer(this.polygon);
+            }
         }
 
         if (this.positions.length == 0) {
@@ -43,7 +49,9 @@ export class PolyArea {
 
     removeAll() {
         this.positions = [];
-        this.featureGroup.removeLayer(this.polygon);
+        if (this.polygon) {
+            this.featureGroup.removeLayer(this.polygon);
+        }
         this.polygon = undefined;
     }
     
