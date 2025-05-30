@@ -92,8 +92,8 @@ $(document).ready(function () {
         window.history.replaceState(null, null, `?centreX=${centrePos.x}&centreY=${centrePos.y}&centreZ=${centrePos.z}&zoom=${zoom}`);
     };
 
-    map.on('move', setUrlParams);
-    map.on('zoom', setUrlParams);
+    map.on('moveend', setUrlParams);
+    map.on('zoomend', setUrlParams);
 
     let zoom = 7;
     let centreLatLng = [-79, -137]
