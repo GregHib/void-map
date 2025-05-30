@@ -26,25 +26,45 @@ $(document).ready(function () {
     const urlZoom = currentUrl.searchParams.get("zoom");
 
     const urlRegionID = currentUrl.searchParams.get("regionID");
+    const tileSize = 256;
+    const numTiles = 256;
+    const startX = 50
+    const startY = 50
+    const bounds = [[0, 0], [tileSize * numTiles, tileSize * numTiles]];
+    L.CRS.SimpleOffset = L.extend({}, L.CRS.Simple, {
+        offsetZoom: 8,
+        scale: function (zoom) {
+            return Math.pow(2, zoom - this.offsetZoom);
+        },
 
-    var map = L.map('map', {
-        //maxBounds: L.latLngBounds(L.latLng(-40, -180), L.latLng(85, 153))
+        zoom: function (scale) {
+            return Math.log(scale) / Math.LN2 + this.offsetZoom;
+        },
+    });
+    const map = L.map('map', {
+        crs: L.CRS.SimpleOffset,
+        maxBounds: bounds,
+        center: [tileSize * startY, tileSize * startX],
+        minZoom: 4,
+        maxZoom: 11,
+        zoom: 8,
         zoomControl: false,
-        renderer: L.canvas()
     });
 
     map.plane = 0;
 
+    const CustomTileLayer = L.TileLayer.extend({
+        getTileUrl: function (coords) {
+            return `./map_tiles/test-2/0/${coords.z}/${coords.x}/${-coords.y}.png`;
+        },
+    })
     map.updateMapPath = function () {
         if (map.tile_layer !== undefined) {
             map.removeLayer(map.tile_layer);
         }
-        map.tile_layer = L.tileLayer('https://raw.githubusercontent.com/GregHib/void-map-tiles/master/' + map.plane + '/{z}/{x}/{y}.png', {
-            minZoom: 4,
-            maxZoom: 11,
-            attribution: 'Map data',
-            noWrap: true,
-            tms: true
+        map.tile_layer = new CustomTileLayer({
+            tileSize: tileSize,
+            bounds: bounds,
         });
         map.tile_layer.addTo(map);
         map.invalidateSize();
@@ -95,7 +115,7 @@ $(document).ready(function () {
     map.on('moveend', setUrlParams);
     map.on('zoomend', setUrlParams);
 
-    let zoom = 7;
+    let zoom = 8;
     let centreLatLng = [-79, -137]
 
     if (urlZoom) {
