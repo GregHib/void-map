@@ -42,6 +42,8 @@ export class Position {
         return Math.sqrt((diffX * diffX) + (diffY * diffY));
     }
 
+    // 16, 97
+    // 8, 34, 31
     toLeaflet(map) {
         var startLatLng = this.toLatLng(map)
         var endLatLng = new Position(this.x + 1, this.y + 1, this.z).toLatLng(map)

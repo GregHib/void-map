@@ -39,9 +39,9 @@ $(document).ready(function () {
         if (map.tile_layer !== undefined) {
             map.removeLayer(map.tile_layer);
         }
-        map.tile_layer = L.tileLayer('https://raw.githubusercontent.com/GregHib/void-map-tiles/main/' + map.plane + '/{z}/{x}/{y}.png', {
+        map.tile_layer = L.tileLayer('https://raw.githubusercontent.com/GregHib/void-map-tiles/master/' + map.plane + '/{z}/{x}/{y}.png', {
             minZoom: 4,
-            maxZoom: 9,
+            maxZoom: 11,
             attribution: 'Map data',
             noWrap: true,
             tms: true
