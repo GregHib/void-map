@@ -1,12 +1,7 @@
-# Explv.github.io
+# Void's Map
 
-### Dax Path
-
-The Dax Path tool makes use of @itsdax great web walking API https://github.com/itsdax/Runescape-Web-Walker-Engine
-All credits to him.
+Thanks to [Explv](https://github.com/Explv/Explv.github.io)
 
 ### Generating map tiles
 
-1. See instructions in https://github.com/Explv/osrs_map_tiles#generating-tiles
-
-2. Test the map to ensure coordinates produced for a selection of OSRS tiles are correct, you can compare with the live version of https://explv.github.io/
+1. See instructions in https://github.com/GregHib/void-map-tiles#generating-tiles
