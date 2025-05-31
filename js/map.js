@@ -56,7 +56,7 @@ $(document).ready(function () {
     const CustomTileLayer = L.TileLayer.extend({
         getTileUrl: function (coords) {
             // return `./map_tiles/${map.plane}/${coords.z}/${coords.x}/${-coords.y}.png`;
-            return `.https://raw.githubusercontent.com/GregHib/void-map-tiles/master/${map.plane}/${coords.z}/${coords.x}/${-coords.y}.png`;
+            return `https://raw.githubusercontent.com/GregHib/void-map-tiles/master/${map.plane}/${coords.z}/${coords.x}/${-coords.y}.png`;
         },
     })
     map.updateMapPath = function () {
