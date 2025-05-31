@@ -115,23 +115,4 @@ $(document).ready(function () {
 
     map.on('moveend', setUrlParams);
     map.on('zoomend', setUrlParams);
-
-    let zoom = 8;
-    let centreLatLng = [-79, -137]
-
-    if (urlZoom) {
-        zoom = urlZoom;
-    }
-
-    if (urlCentreX && urlCentreY && urlCentreZ) {
-        const centrePos = new Position(Number(urlCentreX), Number(urlCentreY), Number(urlCentreZ));
-        centreLatLng = centrePos.toLatLng(map);
-    } else if (urlRegionID) {
-        const region = new Region(Number(urlRegionID));
-        const centrePos = region.toCentrePosition()
-        centreLatLng = centrePos.toLatLng(map);
-        zoom = urlZoom || 9;
-    }
-
-    map.setView(centreLatLng, zoom)
 });
