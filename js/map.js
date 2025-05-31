@@ -104,5 +104,5 @@ $(document).ready(function () {
     };
 
     map.on('moveend', setUrlParams);
-    map.on('zoom', setUrlParams);
+    map.on('zoomend', setUrlParams);
 });
