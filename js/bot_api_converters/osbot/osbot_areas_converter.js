@@ -91,6 +91,56 @@ export class OSBotAreasConverter extends OSBotConverter {
         return output;
     }
 
+    fromGroml(text, areas) {
+        areas.removeAll();
+
+        // Split text into blocks separated by empty lines
+        var blocks = text.trim().split(/\n\s*\n/);
+
+        for (var i = 0; i < blocks.length; i++) {
+            var block = blocks[i].trim();
+            if (!block) continue;
+
+            var lines = block.split('\n');
+            var xRange = null;
+            var yRange = null;
+            var level = 0;
+
+            for (var j = 0; j < lines.length; j++) {
+                var line = lines[j].trim();
+
+                // Parse x = [start, end]
+                var xMatch = line.match(/^x\s*=\s*\[\s*(\d+)\s*,\s*(\d+)\s*\]$/);
+                if (xMatch) {
+                    xRange = [parseInt(xMatch[1]), parseInt(xMatch[2])];
+                    continue;
+                }
+
+                // Parse y = [start, end]
+                var yMatch = line.match(/^y\s*=\s*\[\s*(\d+)\s*,\s*(\d+)\s*\]$/);
+                if (yMatch) {
+                    yRange = [parseInt(yMatch[1]), parseInt(yMatch[2])];
+                    continue;
+                }
+
+                // Parse level = z
+                var levelMatch = line.match(/^level\s*=\s*(\d+)$/);
+                if (levelMatch) {
+                    level = parseInt(levelMatch[1]);
+                    continue;
+                }
+            }
+
+            // Create area if we have both x and y ranges
+            if (xRange && yRange) {
+                areas.add(new Area(
+                    new Position(xRange[0], yRange[0], level),
+                    new Position(xRange[1], yRange[1], level)
+                ));
+            }
+        }
+    }
+
     toJavaList(areas) {
         if (areas.areas.length === 1) {
             return `${this.javaArea} area = ` + this.toJavaSingle(areas.areas[0]) + ";";

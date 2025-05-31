@@ -71,6 +71,47 @@ export class OSBotPathConverter extends OSBotConverter {
         return output;
     }
 
+    fromGroml(text, path) {
+        path.removeAll();
+        text = text.replaceAll(' ', '')
+        var x = {}
+        var y = {}
+        var level = 0
+        var lines = text.split("\n")
+        for (let i = 0; i < lines.length; i++) {
+            var line = lines[i]
+            let value = line.split('=')[1];
+            switch (line[0]) {
+                case 'x':
+                    x = this.parseNumberArray(value)
+                    break;
+                case 'y':
+                    y = this.parseNumberArray(value)
+                    break;
+                case 'l':
+                    level = parseFloat(value)
+                    break;
+            }
+        }
+        for (let i = 0; i < x.length; i++) {
+            path.add(new Position(x[i], y[i], level));
+        }
+    }
+
+    parseNumberArray(str) {
+        const numberArray = str
+            .replace(/^\s*\[\s*|\s*\]\s*$/g, '')  // remove brackets and surrounding spaces
+            .split(',')                            // trim spaces
+            .filter(s => s.length > 0)            // skip empty strings
+            .map(parseFloat);
+
+        if (numberArray.some(isNaN)) {
+            throw new Error("Invalid number in input string");
+        }
+
+        return numberArray;
+    }
+
     toJavaList(path) {
         if (path.positions.length == 1) {
             return this.toJavaSingle(path.positions[0]);

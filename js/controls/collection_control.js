@@ -12,65 +12,13 @@ import {OSBotAreasConverter} from '../bot_api_converters/osbot/osbot_areas_conve
 import {OSBotPathConverter} from '../bot_api_converters/osbot/osbot_path_converter.js';
 import {OSBotPolyAreaConverter} from '../bot_api_converters/osbot/osbot_polyarea_converter.js';
 
-import {TRiBotAreasConverter} from '../bot_api_converters/tribot/tribot_areas_converter.js';
-import {TRiBotPathConverter} from '../bot_api_converters/tribot/tribot_path_converter.js';
-import {TRiBotPolyAreaConverter} from '../bot_api_converters/tribot/tribot_polyarea_converter.js';
-
-import {DreamBotAreasConverter} from '../bot_api_converters/dreambot/dreambot_areas_converter.js';
-import {DreamBotPathConverter} from '../bot_api_converters/dreambot/dreambot_path_converter.js';
-import {DreamBotPolyAreaConverter} from '../bot_api_converters/dreambot/dreambot_polyarea_converter.js';
-
-import {RSPeerAreasConverter} from '../bot_api_converters/rspeer/rspeer_areas_converter.js';
-import {RSPeerPathConverter} from '../bot_api_converters/rspeer/rspeer_path_converter.js';
-import {RSPeerPolyAreaConverter} from '../bot_api_converters/rspeer/rspeer_polyarea_converter.js';
-
-import {QuantumBotAreasConverter} from '../bot_api_converters/quantumbot/quantumbot_areas_converter.js';
-import {QuantumBotPathConverter} from '../bot_api_converters/quantumbot/quantumbot_path_converter.js';
-import {QuantumBotPolyAreaConverter} from '../bot_api_converters/quantumbot/quantumbot_polyarea_converter.js';
-
-import {RuneMateAreasConverter} from '../bot_api_converters/runemate/runemate_areas_converter.js';
-import {RuneMatePathConverter} from '../bot_api_converters/runemate/runemate_path_converter.js';
-import {RuneMatePolyAreaConverter} from '../bot_api_converters/runemate/runemate_polyarea_converter.js';
-
-import {RuneLiteAreasConverter} from '../bot_api_converters/runelite/runelite_areas_converter.js';
-import {RuneLitePathConverter} from '../bot_api_converters/runelite/runelite_path_converter.js';
 
 var converters = {
-    "OSBot": {
+    "Default": {
         "areas_converter": new OSBotAreasConverter(),
         "path_converter": new OSBotPathConverter(),
         "polyarea_converter": new OSBotPolyAreaConverter()
     },
-    "TRiBot": {
-        "areas_converter": new TRiBotAreasConverter(),
-        "path_converter": new TRiBotPathConverter(),
-        "polyarea_converter": new TRiBotPolyAreaConverter()
-    },
-    "DreamBot": {
-        "areas_converter": new DreamBotAreasConverter(),
-        "path_converter": new DreamBotPathConverter(),
-        "polyarea_converter": new DreamBotPolyAreaConverter()
-    },
-    "RSPeer": {
-        "areas_converter": new RSPeerAreasConverter(),
-        "path_converter": new RSPeerPathConverter(),
-        "polyarea_converter": new RSPeerPolyAreaConverter()
-    },
-    "QuantumBot": {
-        "areas_converter": new QuantumBotAreasConverter(),
-        "path_converter": new QuantumBotPathConverter(),
-        "polyarea_converter": new QuantumBotPolyAreaConverter()
-    },
-    "RuneMate": {
-        "areas_converter": new RuneMateAreasConverter(),
-        "path_converter": new RuneMatePathConverter(),
-        "polyarea_converter": new RuneMatePolyAreaConverter()
-    },
-    "RuneLite": {
-        "areas_converter": new RuneLiteAreasConverter(),
-        "path_converter": new RuneLitePathConverter(),
-        "polyarea_converter": new RuneLitePathConverter()
-    }
 };
 
 export var CollectionControl = L.Control.extend({    

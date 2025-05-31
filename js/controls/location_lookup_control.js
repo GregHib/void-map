@@ -28,6 +28,7 @@ export var LocationLookupControl = L.Control.extend({
                 }
             });
             self.locations = locationsArray;
+            console.log(locationsArray)
         });
 
         $(locationInput).autocomplete({

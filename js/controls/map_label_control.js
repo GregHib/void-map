@@ -2,7 +2,6 @@
 
 import { CanvasLayer } from '../external/L.CanvasLayer.js';
 import Locations from "../model/Locations.js";
-import { Position } from "../model/Position.js";
 
 var MapLabelsCanvas = CanvasLayer.extend({
     setData: function (data) {
