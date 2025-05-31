@@ -29,8 +29,6 @@ export class DreamBotAreasConverter extends OSBotAreasConverter {
         areas.removeAll();
         text = text.replace(/\s/g, '');
         
-        var areasPattern = ``
-        
         var areasPattern = `(?:new${this.javaArea}\\((\\d+,\\d+,\\d+,\\d+(?:,\\d+)?)\\)|\\(new${this.javaPosition}\\((\\d+,\\d+(?:,\\d)?)\\),new${this.javaPosition}\\((\\d+,\\d+(?:,\\d)?)\\)\\))`;
         var re = new RegExp(areasPattern,"mg");
         var match;
