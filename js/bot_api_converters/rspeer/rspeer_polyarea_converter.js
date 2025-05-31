@@ -11,7 +11,7 @@ export class RSPeerPolyAreaConverter extends OSBotPolyAreaConverter {
         this.javaArea = "Area";
         this.javaPosition = "Position";
     }
-    
+
     /*
     API Doc:
         https://rspeer.org/javadocs/org/rspeer/runetek/api/movement/position/Area.html
@@ -26,15 +26,15 @@ export class RSPeerPolyAreaConverter extends OSBotPolyAreaConverter {
     fromJava(text, polyarea) {
         polyarea.removeAll();
         text = text.replace(/\s/g, '');
-        
+
         var floorLevelPattern = `${this.javaArea}\\.polygonal\\((\\d),`;
         var re = new RegExp(floorLevelPattern, "mg");
         var match = re.exec(text);
-        
+
         var floorLevel = undefined;
-        
+
         if (match) {
-            floorLevel = match[1];    
+            floorLevel = match[1];
         }
 
         var positionsPattern = `new${this.javaPosition}\\((\\d+,\\d+(?:,\\d)?)\\)`;
@@ -42,17 +42,60 @@ export class RSPeerPolyAreaConverter extends OSBotPolyAreaConverter {
         var match;
         while ((match = re.exec(text))) {
             var values = match[1].split(",");
-            
+
             var z = values.length == 2 ? 0 : values[2];
-            
+
             if (floorLevel !== undefined) {
                 z = floorLevel;
             }
-            
+
             polyarea.add(new Position(values[0], values[1], z));
         }
     }
-    
+
+
+
+    fromGroml(text, polyarea) {
+        polyarea.removeAll();
+        text = text.replaceAll(' ', '')
+        var x = {}
+        var y = {}
+        var level = 0
+        var lines = text.split("\n")
+        for (let i = 0; i < lines.length; i++) {
+            var line = lines[i]
+            let value = line.split('=')[1];
+            switch (line[0]) {
+                case 'x':
+                    x = this.parseNumberArray(value)
+                    break;
+                case 'y':
+                    y = this.parseNumberArray(value)
+                    break;
+                case 'l':
+                    level = parseFloat(value)
+                    break;
+            }
+        }
+        for (let i = 0; i < x.length; i++) {
+            polyarea.add(new Position(x[i], y[i], level));
+        }
+    }
+
+    parseNumberArray(str) {
+        const numberArray = str
+            .replace(/^\s*\[\s*|\s*\]\s*$/g, '')  // remove brackets and surrounding spaces
+            .split(',')                            // trim spaces
+            .filter(s => s.length > 0)            // skip empty strings
+            .map(parseFloat);
+
+        if (numberArray.some(isNaN)) {
+            throw new Error("Invalid number in input string");
+        }
+
+        return numberArray;
+    }
+
     toJava(polyarea) {
         if (polyarea.positions.length == 0) {
             return "";
@@ -66,6 +109,31 @@ export class RSPeerPolyAreaConverter extends OSBotPolyAreaConverter {
             }
         }
         output += "\n    }\n);";
+        return output;
+    }
+
+    toGroml(polyarea) {
+        if (polyarea.positions.length == 0) {
+            return "";
+        }
+        var output = `x = [`;
+        for (var i = 0; i < polyarea.positions.length; i++) {
+            output += `${polyarea.positions[i].x}`;
+            if (i !== polyarea.positions.length - 1) {
+                output += ",";
+            }
+        }
+        output += "]\ny = [";
+        for (var i = 0; i < polyarea.positions.length; i++) {
+            output += `${polyarea.positions[i].y}`;
+            if (i !== polyarea.positions.length - 1) {
+                output += ",";
+            }
+        }
+        output += ']\n'
+        if (polyarea.positions.length > 0 && polyarea.positions[0].z > 0) {
+            output += `level = ${polyarea.positions[0].z}\n`;
+        }
         return output;
     }
 }

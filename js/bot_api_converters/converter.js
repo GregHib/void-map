@@ -6,6 +6,8 @@ export class Converter {
     
     toJava(drawable) {
         switch ($("#output-type").val()) {
+            case "Groml":
+                return this.toGroml(drawable);
             case "Array":
                 return this.toJavaArray(drawable);
             case "List":
@@ -18,7 +20,9 @@ export class Converter {
     }
     
     toRaw(drawable) {}
-    
+
+    toGroml(drawable) {}
+
     toJavaSingle(drawable) {}
     
     toJavaArray(drawable) {}

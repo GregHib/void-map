@@ -289,7 +289,14 @@ export var CollectionControl = L.Control.extend({
 
         if (this._currentDrawable !== undefined) {
             var botAPI = $("#bot-api option:selected").text();
-            output = converters[botAPI][this._currentConverter].toJava(this._currentDrawable);
+
+            switch ($("#output-type").val()) {
+                case "Groml":
+                    output = converters[botAPI][this._currentConverter].toGroml(this._currentDrawable);
+                    break
+                default:
+                    output = converters[botAPI][this._currentConverter].toJava(this._currentDrawable);
+            }
         }
 
         $("#code-output").html(output);
@@ -298,7 +305,14 @@ export var CollectionControl = L.Control.extend({
     _loadFromText: function() {
         if (this._currentDrawable !== undefined) {
             var botAPI = $("#bot-api option:selected").text();
-            converters[botAPI][this._currentConverter].fromJava($("#code-output").text(), this._currentDrawable);
+            switch ($("#output-type").val()) {
+                case "Groml":
+                    converters[botAPI][this._currentConverter].fromGroml($("#code-output").text(), this._currentDrawable);
+                    break
+                default:
+                    converters[botAPI][this._currentConverter].fromJava($("#code-output").text(), this._currentDrawable);
+            }
+
         }
     },
 

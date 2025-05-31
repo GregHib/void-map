@@ -6,7 +6,7 @@ import {OSBotConverter} from './osbot_converter.js';
 
 export class OSBotPathConverter extends OSBotConverter {
 
-    
+
     /*
     API Doc:
         https://osbot.org/api/org/osbot/rs07/api/map/Position.html
@@ -24,7 +24,7 @@ export class OSBotPathConverter extends OSBotConverter {
             path.add(new Position(values[0], values[1], values[2]));
         }
     }
-    
+
     toRaw(path) {
         var output = "";
         for (var i = 0; i < path.positions.length; i++) {
@@ -32,11 +32,11 @@ export class OSBotPathConverter extends OSBotConverter {
         }
         return output;
     }
-    
+
     toJavaSingle(position) {
         return `${this.javaPosition} position = new ${this.javaPosition}(${position.x}, ${position.y}, ${position.z});`;
     }
-    
+
     toJavaArray(path) {
         if (path.positions.length == 1) {
             return this.toJavaSingle(path.positions[0]);
@@ -52,7 +52,25 @@ export class OSBotPathConverter extends OSBotConverter {
         }
         return "";
     }
-    
+
+    toGroml(path) {
+        var output = `x = [`;
+        for (var i = 0; i < path.positions.length; i++) {
+            if (i !== 0) output += ','
+            output += `${path.positions[i].x}`;
+        }
+        output += ']\ny = ['
+        for (var i = 0; i < path.positions.length; i++) {
+            if (i !== 0) output += ','
+            output += `${path.positions[i].y}`;
+        }
+        output += ']\n'
+        if (path.plane > 0) {
+            output += `level = ${path.plane}\n`;
+        }
+        return output;
+    }
+
     toJavaList(path) {
         if (path.positions.length == 1) {
             return this.toJavaSingle(path.positions[0]);
@@ -65,7 +83,7 @@ export class OSBotPathConverter extends OSBotConverter {
         }
         return "";
     }
-    
+
     toJavaArraysAsList(path) {
         if (path.positions.length == 1) {
             return this.toJavaSingle(path.positions[0]);
