@@ -2,8 +2,8 @@
 
 import {Position} from './Position.js';
 
-export const MIN_X = 1024, MAX_X = 4224;
-export const MIN_Y = 1216, MAX_Y = 12608;
+export const MIN_X = 0, MAX_X = 6400;
+export const MIN_Y = 1856, MAX_Y = 10496;
 export const REGION_WIDTH = 64;
 export const REGION_HEIGHT = 64;
 

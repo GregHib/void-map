@@ -14,23 +14,13 @@ import { PlaneControl } from './controls/plane_control.js';
 import { RegionLabelsControl } from './controls/region_labels_control.js';
 import { RegionLookupControl } from './controls/region_lookup_control.js';
 import { TitleLabel } from './controls/title_label.js';
-import { Region } from './model/Region.js';
 
 $(document).ready(function () {
-
-    const currentUrl = new URL(window.location.href);
-
-    const urlCentreX = currentUrl.searchParams.get("centreX");
-    const urlCentreY = currentUrl.searchParams.get("centreY");
-    const urlCentreZ = currentUrl.searchParams.get("centreZ");
-    const urlZoom = currentUrl.searchParams.get("zoom");
-
-    const urlRegionID = currentUrl.searchParams.get("regionID");
     const tileSize = 256;
     const numTiles = 256;
     const startX = 50
     const startY = 50
-    const bounds = [[0, 0], [tileSize * numTiles, tileSize * numTiles]];
+    const bounds = [[-tileSize * numTiles / 4, -tileSize * numTiles / 2], [tileSize * numTiles, tileSize * numTiles]];
     L.CRS.SimpleOffset = L.extend({}, L.CRS.Simple, {
         offsetZoom: 8,
         scale: function (zoom) {
@@ -82,7 +72,7 @@ $(document).ready(function () {
     map.addControl(new PlaneControl());
     map.addControl(new LocationLookupControl());
     map.addControl(new MapLabelControl());
-    map.addControl(new CollectionControl({ position: 'topright' }));
+    map.addControl(new CollectionControl({position: 'topright'}));
     map.addControl(new RegionLookupControl());
     map.addControl(new GridControl());
     map.addControl(new RegionLabelsControl());
